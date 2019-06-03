@@ -1,6 +1,7 @@
 package test_enrollments;
 
 import commands.CommandType;
+import commands.DropCommand;
 import commands.ICommand;
 import commands.RegisterCommand;
 import registrations.GRClass;
@@ -8,11 +9,13 @@ import registrations.Student;
 
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class RegistrationsTest {
 
     private static Queue<ICommand> commandsQueue = new LinkedBlockingDeque<>();
+    private static Stack<ICommand> undoStack = new Stack<>();
 
     private static  Scanner console = new Scanner(System.in);
 
@@ -31,7 +34,7 @@ public class RegistrationsTest {
 
     public static void printMenuAndChoose(){
 
-        while (true){
+        while(true){
             printMenu();
             makeUserChoice();
         }
@@ -49,6 +52,8 @@ public class RegistrationsTest {
         System.out.println("x: execute all commands in the command queue");
         // print out as "undo" option
 
+        System.out.println("z: undo");
+
     }
 
     public static void makeUserChoice(){
@@ -64,6 +69,18 @@ public class RegistrationsTest {
             case "x":
                 executeQueueCommand();
                 break;
+            case "z;":
+                undoLastCommand();
+                    break;
+
+        }
+    }
+
+    public static void undoLastCommand(){
+        if (!undoStack.isEmpty()){
+            ICommand last = undoStack.pop();
+
+            last.execute();
 
         }
     }
@@ -76,6 +93,8 @@ public class RegistrationsTest {
 
             // keep track of the executed command
             // can undo later
+
+            undoStack.push(command);
         }
     }
 
@@ -86,7 +105,7 @@ public class RegistrationsTest {
     }
 
     public static void dropStudent(){
-        ICommand drop = new RegisterCommand(
+        ICommand drop = new DropCommand(
                 getStudentFromUSer(), getClassFromUser());
         commandsQueue.add(drop);
     }

@@ -21,7 +21,7 @@ public class GRClass {
         this.seats = seats;
     }
 
-    public void registerStudent(Student student){
+    public boolean registerStudent(Student student){
         // quietly ignore unsuccessful registrations
         if (!hasStudent(student)){
             // is the class full?
@@ -31,10 +31,13 @@ public class GRClass {
             }else {
                 enrolledStudents.add(student);
             }
+
+            return true;
         }
+        return false;
     }
 
-    public void dropStudent(Student student){
+    public boolean dropStudent(Student student){
         if (hasStudent(student)){
             // wait list
             if (waitListedStudents.contains(student)){
@@ -46,7 +49,10 @@ public class GRClass {
                     enrolledStudents.add(waitListedStudents.get(0));
                 }
             }
+
+            return true;
         }
+        return false;
     }
 
     public boolean hasStudent(Student student){
